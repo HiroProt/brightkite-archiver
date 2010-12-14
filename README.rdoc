@@ -1,0 +1,38 @@
+= brightkite-archiver
+
+A basic archiver for checkins, posts and photos for a Brightkite account. I hacked this together so that I could back up my stuff before Brightkite disables their checkin/posting functionality.
+
+= Pre-requisites
+
+* ruby 1.8.7
+* rubygems
+* typhoeus gem (https://github.com/pauldix/typhoeus)
+* json gem
+
+= Usage
+
+1. Make sure you have the pre-requisites installed
+2. Edit bk_backup.rb and fill in your BK username and password
+3. Run bk_backup using "ruby bk_backup.rb"
+4. Wait, wait, wait :)
+5. Open archive_browser.html in Safari or Firefox to see your archive (Chrome doesn't do it, sorry)
+
+== Note on Patches/Pull Requests
+ 
+* Fork the project.
+* Make your feature addition or bug fix.
+* Add tests for it. This is important so I don't break it in a
+  future version unintentionally.
+* Commit, do not mess with rakefile, version, or history.
+  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
+* Send me a pull request. Bonus points for topic branches.
+
+== Caveats
+
+I take no responsibility for what this code might do. It could break things, but it worked for me. It is pretty untested, so if anything goes wrong, you might have to fix it (please send me a patch).
+
+== Credits
+
+Written by Martin May (http://github.com/HiroProt).
+
+Copyright (c) 2010 Martin May. See LICENSE for details.
