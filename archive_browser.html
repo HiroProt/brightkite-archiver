@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Brightkite Backup Browser</title>
+  <meta name="description" content="Brightkite Backup Browser" />
+  <meta name="author" content="Martin May" />
+  <link href="styles.css" media="screen" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="jquery-1.4.4.min.js"></script>
+  <script type="text/javascript" src="jquery.tmpl.js"></script>
+  <script type="text/javascript" src="jquery.timeago.js"></script>
+  <script type="text/javascript" src="jquery.history.js"></script>
+</head> 
+ 
+<body> 
+
+<script id="postTemplate" type="text/x-jquery-tmpl">
+  <div class="post">
+    {{if object_type == 'photo'}}
+      <a href="${photo}" class="photo-link"><img src="${feedUrl(photo)}" class="photo" /></a>
+    {{/if}}
+    {{if body}}<div class="body">${body}</div>{{/if}}
+    <div class="meta">
+      {{if object_type == 'checkin'}}checked in {{/if}}<span class="place">@ ${place.name}{{if place.display_location}} (${place.display_location}){{/if}}</span> - <span class="timestamp" title="${created_at.replace('+0000', 'UTC')}">${$.timeago(created_at)}</span>
+    </div>
+    <div class="comments">
+      {{each comments}}
+        <div class="comment group">
+          <img src="${$value.creator.avatar_url.replace('.png', '-smaller.png')}" />
+          <p><strong>${$value.creator.login}</strong>: ${$value.comment}</p>
+          <div class="meta">${$.timeago($value.created_at)}</div>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</script>
+
+<script type="text/javascript" charset="utf-8">
+
+function loadStream(page) {
+  $.getJSON('bk_posts_' + page + '.json', function(results) {
+    if (results && results.length > 0) {
+      $('html, body').animate({scrollTop:0}, 'fast');
+      current_page = page;
+      $('.page_number').html(page);
+      jQuery.history.load(current_page);
+      $('#results').empty();
+      $.each(results, function(index, value) {
+        $('#results').append($('#postTemplate').tmpl(value));
+      });
+    }
+  });
+}
+
+function nextPage(page) {
+  loadStream(parseInt(current_page) + 1);
+}
+
+function previousPage(page) {
+  loadStream(parseInt(current_page) - 1);
+}
+
+function feedUrl(url) {
+  return url.replace(/(\.[A-Za-z]+)?$/i, "-feed$1")
+}
+
+$(document).ready(function($){
+  $.history.init(function(hash){
+    if (hash == "") {
+      current_page = 1;
+    } else {
+      current_page = hash;
+    }
+    
+    loadStream(current_page);
+    
+  }, { unescape: ",/" });
+});
+
+
+</script>
+
+<div id="wrapper">
+  
+  <div id="masthead">
+    My Brightkite Archive
+  </div>
+  
+  <div class="navigation">
+    <a href="javascript:previousPage();">previous page</a> - <strong>page <span class="page_number">1</span></strong> - <a href="javascript:nextPage();">next page</a>
+  </div>
+
+  <div id="results">
+    <div class="noresults">No archived data found, please run the archiver first and make sure you're using Safari or Firefox (sorry, Chrome doesn't work)</div>
+  </div>
+  
+  <div class="navigation">
+    <a href="javascript:previousPage();">previous page</a> - <strong>page <span class="page_number">1</span></strong> - <a href="javascript:nextPage();">next page</a>
+  </div>
+</div>
+
+</body> 
+</html> 

@@ -1,0 +1,4 @@
+.DS_Store
+bk_images/*
+bk_avatars/*
+*.json
